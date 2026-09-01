@@ -1,0 +1,57 @@
+# Configuration for Home Credit Multimodal MoE
+
+data:
+  # Raw data directory (containing 7 CSV files from Kaggle)
+  data_dir: "./data"
+  
+  # Processed features (output from feature engineering)
+  feature_path: "./outputs/home_credit_features.npz"
+  metadata_path: "./outputs/home_credit_feature_metadata.json"
+  
+  # Train/val split
+  val_size: 0.2
+  random_seed: 42
+
+model:
+  # Architecture dimensions
+  representation_dim: 128    # Output dim per modality expert
+  demo_embed_dim: 32         # Demographic info embedding
+  hidden_dim: 64             # Hidden dim in branches
+  dropout: 0.2               # MLP dropout
+  
+  # Adaptive dropout settings
+  p_modality_dropout_max: 0.4
+  adaptive_gamma: 0.1
+  adaptive_beta: 0.95
+  
+  # Dropout units (group modalities for joint dropout)
+  # Unit 0: [application, bureau, previous] - core credit info
+  # Unit 1: [pos] - POS CASH behavior
+  # Unit 2: [credit_card] - credit card behavior
+  # Unit 3: [installments] - payment history
+  dropout_units: [[0, 1, 2], [3], [4], [5]]
+  availability_target_units: [[0, 1, 2], [3], [4], [5]]
+
+training:
+  max_epochs: 50
+  batch_size: 256
+  lr: 0.001
+  weight_decay: 1e-5
+  patience: 10  # Early stopping patience
+  
+  # Learning rate scheduler
+  scheduler_step_size: 10
+  scheduler_gamma: 0.5
+  
+  # Loss weights
+  unimodal_loss_weight: 0.3  # Weight for auxiliary unimodal losses
+
+logging:
+  log_dir: "./outputs/logs"
+  save_every: 5              # Save checkpoint every N epochs
+  verbose: true
+
+web:
+  host: "localhost"
+  port: 8501
+  max_samples_display: 100   # Max samples to show in demo heatmap
