@@ -31,7 +31,7 @@ def collate_fn(batch):
 def prepare_data_splits(
     raw_data: Dict,  # Đã sửa từ 'raw_ Dict' thành 'raw_data: Dict'
     modality_names: List[str], 
-    test_size: float = 0.2, 
+    test_size: float = 0.99, 
     random_state: int = 42
 ):
     """

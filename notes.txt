@@ -1,0 +1,1 @@
+version 2 : chia train 257 features thành các nhóm riêng khoảng 10 nhóm 
